@@ -10,7 +10,7 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email
 
     def serialize(self):
         return {
@@ -27,7 +27,7 @@ class Characters(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    character_name = db.Column(db.String(250))
+    character_name = db.Column(db.String(250), unique=True, nullable=False)
     character_height = db.Column(db.String(250))
     character_hair_color = db.Column(db.String(250), nullable=False)
     character_skin_color = db.Column(db.String(250), nullable=False)
@@ -35,17 +35,17 @@ class Characters(db.Model):
     character_gender = db.Column(db.String(250), nullable=False)
 
     def __repr__(self):
-        return '<Characters %r>' % self.name
+        return '<Characters %r>' % self.character_name
 
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name,
-            "height": self.character_height,
-            "hair_color": self.hair_color,
-            "skin_color": self.skin_color,
-            "eyes_color": self.eyes_color,
-            "gender": self.gender
+            "character_name": self.character_name,
+            "character_height": self.character_height,
+            "character_hair_color": self.character_hair_color,
+            "character_skin_color": self.character_skin_color,
+            "character_eyes_color": self.character_eyes_color,
+            "character_gender": self.character_gender,
 
     # do not serialize the password, its a security breach
     }
@@ -61,17 +61,19 @@ class Planets(db.Model):
     planet_diameter = db.Column(db.Integer, primary_key=True)
     planet_climate = db.Column(db.String(250), nullable=False)
     planet_gravity = db.Column(db.String(250), nullable=False)
+    planet_name = db.Column(db.String(250), nullable=False, unique=True)
 
     def __repr__(self):
-        return '<Planets %r>' % self.name
+        return '<Planets %r>' % self.planet.name
 
     def serialize(self):
         return {
             "id": self.id,
-            "planet_population": self.name,
-            "planet_diameter": self.character_height,
-            "planet_climate": self.hair_color,
-            "planet_gravity": self.skin_color
+            "planet_population": self.planet_population,
+            "planet_diameter": self.planet_diameter,
+            "planet_climate": self.planet_climate,
+            "planet_gravity": self.planet_gravity,
+            "planet_name" : self.planet_name,
             
     }
 
@@ -80,11 +82,11 @@ class FavoritesCharacters(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     character_id = db.Column (db.Integer, db.ForeignKey('characters.id'))
 
     def __repr__(self):
-        return '<Planets %r>' % self.name
+        return '<Favoritescharacters %r>' % self.id
 
     def serialize(self):
         return {
@@ -101,11 +103,11 @@ class FavoritesPlanets(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column (db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column (db.Integer, db.ForeignKey('User.id'))
     planet_id = db.Column (db.Integer, db.ForeignKey('planets.id'))
 
     def __repr__(self):
-        return '<Planets %r>' % self.name
+        return '<FavoritesPlanets %r>' % self.id
 
     def serialize(self):
         return {
