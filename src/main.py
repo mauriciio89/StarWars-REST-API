@@ -78,6 +78,27 @@ def get_planet(planet_id):
 
     return jsonify(response_body), 200      
 
+@app.route('/favoritecharacter/<int:id_character>/<int:id_user>', methods=['POST'])
+def post_favoritecharacter(id_character, id_user):
+    favorite_character = FavoritesCharacters(user_id=int(id_user), character_id=int(id_character))
+    db.session.add(favorite_character)
+    db.session.commit()
+    response_body = {
+        "msg": "favorito agregado exitosamente"
+    }
+    return jsonify(response_body), 200
+
+@app.route('/favoriteplanet/<int:id_planet>/<int:id_user>', methods=['POST'])
+def post_favoriteplanet(id_planet, id_user):
+    favorite_planet = FavoritesPlanets(user_id=int(id_user), planet_id=int(id_planet))
+    db.session.add(favorite_planet)
+    db.session.commit()
+    response_body = {
+        "msg": "favorito agregado exitosamente"
+    }
+    return jsonify(response_body), 200    
+
+    
 
 
 # this only runs if `$ python src/main.py` is executed
