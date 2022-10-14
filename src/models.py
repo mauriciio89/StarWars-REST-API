@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ ='user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
@@ -16,6 +17,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            "name": self.name,
 
     # do not serialize the password, its a security breach
     }
@@ -57,14 +59,14 @@ class Planets(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    planet_population = db.Column(db.Integer, primary_key=True)
-    planet_diameter = db.Column(db.Integer, primary_key=True)
+    planet_population = db.Column(db.Integer)
+    planet_diameter = db.Column(db.Integer)
     planet_climate = db.Column(db.String(250), nullable=False)
     planet_gravity = db.Column(db.String(250), nullable=False)
     planet_name = db.Column(db.String(250), nullable=False, unique=True)
 
     def __repr__(self):
-        return '<Planets %r>' % self.planet.name
+        return '<Planets %r>' % self.id
 
     def serialize(self):
         return {
@@ -73,7 +75,7 @@ class Planets(db.Model):
             "planet_diameter": self.planet_diameter,
             "planet_climate": self.planet_climate,
             "planet_gravity": self.planet_gravity,
-            "planet_name" : self.planet_name,
+            
             
     }
 
@@ -82,8 +84,8 @@ class FavoritesCharacters(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
-    character_id = db.Column (db.Integer, db.ForeignKey('characters.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    character_id = db.Column (db.Integer, db.ForeignKey('characters.id'), nullable=False)
 
     def __repr__(self):
         return '<Favoritescharacters %r>' % self.id
@@ -103,8 +105,8 @@ class FavoritesPlanets(db.Model):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column (db.Integer, db.ForeignKey('User.id'))
-    planet_id = db.Column (db.Integer, db.ForeignKey('planets.id'))
+    user_id = db.Column (db.Integer, db.ForeignKey('user.id'), nullable=False)
+    planet_id = db.Column (db.Integer, db.ForeignKey('planets.id'), nullable=False)
 
     def __repr__(self):
         return '<FavoritesPlanets %r>' % self.id

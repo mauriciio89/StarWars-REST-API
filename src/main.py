@@ -40,6 +40,44 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@app.route('/planets', methods=['GET'])
+def get_planets():
+    planets = Planets.query.all()
+    result = list(map(lambda item: item.serialize(), planets))
+    response_body = {
+        "results": result
+    }
+
+    return jsonify(result), 200
+
+@app.route('/characters', methods=['GET'])
+def get_characters():
+    characters = Characters.query.all()
+    result = list(map(lambda item: item.serialize(), characters))
+    response_body = {
+        "results": result
+    }
+
+    return jsonify(result), 200  
+
+@app.route('/characters/<int:character_id>', methods=['GET'])
+def get_character(character_id):
+    character = Characters.query.filter_by(id = character_id).first()
+    response_body = {
+        "character": character.serialize()
+    }
+
+    return jsonify(response_body), 200  
+
+@app.route('/planets/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+    planet = Planets.query.filter_by(id = planet_id).first()
+    response_body = {
+        "planet": planet.serialize()
+    }
+
+    return jsonify(response_body), 200      
+
 
 
 # this only runs if `$ python src/main.py` is executed
