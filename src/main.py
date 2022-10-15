@@ -88,6 +88,18 @@ def post_favoritecharacter(id_character, id_user):
     }
     return jsonify(response_body), 200
 
+@app.route('/favoritecharacter/<int:id_character>/<int:id_user>', methods=['DELETE'])  
+def delete_favorite_character(id_character, id_user):
+    favorite_character = FavoritesCharacters.filter_by(user_id=int(id_user), character_id=int(id_character))
+    if favorite_character is None: 
+        return jsonify ({"msg":"no se encontro el favorito character"})
+    db.session.delete(favorite_character)
+    db.session.commit()
+    response_body = {
+        "msg":"favorito character eliminado exitosamente"
+    }
+    return jsonify(response_body), 200      
+
 @app.route('/favoriteplanet/<int:id_planet>/<int:id_user>', methods=['POST'])
 def post_favoriteplanet(id_planet, id_user):
     favorite_planet = FavoritesPlanets(user_id=int(id_user), planet_id=int(id_planet))
@@ -96,7 +108,19 @@ def post_favoriteplanet(id_planet, id_user):
     response_body = {
         "msg": "favorito agregado exitosamente"
     }
-    return jsonify(response_body), 200    
+    return jsonify(response_body), 200  
+
+@app.route('/favoriteplanet/<int:id_planet>/<int:id_user>', methods=['DELETE'])  
+def delete_favorite_planet(id_planet, id_user):
+    favorite_planet = FavoritesPlanets.filter_by(user_id=int(id_user), planet_id=int(id_planet))
+    if favorite_planet is None: 
+        return jsonify ({"msg":"no se encontro el favorito planeta"})
+    db.session.delete(favorite_planet)
+    db.session.commit()
+    response_body = {
+        "msg":"favorito planeta eliminado exitosamente"
+    }
+    return jsonify(response_body), 200  
 
     
 
